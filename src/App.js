@@ -3,6 +3,7 @@ import './App.css'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Blog from './components/Blog'
+import BlogForm from './components/BlogForm'
 
 const App = () => {
   const [ blogs, setBlogs ] = useState([])
@@ -34,6 +35,7 @@ const App = () => {
       window.localStorage.setItem(
         'loggedNoteappUser', JSON.stringify(user)
       )
+      blogService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
@@ -83,6 +85,7 @@ const App = () => {
         <div>
           <h2>blogs</h2>
           <p>{user.name} logged in <button onClick={handleLogout} type="button">logout</button></p>
+          <BlogForm blogs={blogs} setBlogs={setBlogs}/>
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
           )}
