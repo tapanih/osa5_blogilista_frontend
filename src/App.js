@@ -14,6 +14,8 @@ const App = () => {
   const [ user, setUser ] = useState(null)
   const [ notification, setNotification ] = useState(null)
 
+  const blogFormRef = React.createRef()
+
   useEffect(() => {
     blogService
       .getAll().then(initialBlogs => {
@@ -97,12 +99,13 @@ const App = () => {
         <div>
           <h2>blogs</h2>
           <p>{user.name} logged in <button onClick={handleLogout} type="button">logout</button></p>
-          <Togglable buttonLabel='new note'>
+          <Togglable buttonLabel='new note' ref={blogFormRef}>
             <BlogForm
               blogs={blogs}
               setBlogs={setBlogs}
               setNotification={setNotification}
               newNotification={newNotification}
+              blogFormRef={blogFormRef}
             />
           </Togglable>
           {blogs.map(blog =>
