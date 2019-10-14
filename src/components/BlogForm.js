@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
 
-const BlogForm = ({ blogs, setBlogs }) => {
+const BlogForm = ({ blogs, setBlogs, setNotification, newNotification }) => {
   const [ title, setTitle ] = useState('')
   const [ author, setAuthor ] = useState('')
   const [ url, setUrl ] = useState('')
@@ -16,8 +16,9 @@ const BlogForm = ({ blogs, setBlogs }) => {
       setAuthor('')
       setUrl('')
       setBlogs(blogs.concat(blog))
+      newNotification(setNotification, `a new blog "${blog.title} by ${blog.author}" added`, 'success')
     } catch (exception) {
-      console.log('the blog could not be added')
+      newNotification(setNotification, 'blog could not be added', 'error')
     }
   }
 

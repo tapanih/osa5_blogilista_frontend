@@ -4,12 +4,14 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
+import Notification from './components/Notification'
 
 const App = () => {
   const [ blogs, setBlogs ] = useState([])
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
+  const [ username, setUsername ] = useState('')
+  const [ password, setPassword ] = useState('')
+  const [ user, setUser ] = useState(null)
+  const [ notification, setNotification ] = useState(null)
 
   useEffect(() => {
     blogService
@@ -40,7 +42,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      console.log('wrong credentials')
+      newNotification(setNotification, 'wrong username or password', 'error')
     }
   }
 
@@ -48,6 +50,14 @@ const App = () => {
     event.preventDefault()
     window.localStorage.removeItem('loggedNoteappUser')
     setUser(null)
+  }
+
+  const newNotification = (setter, message, type) => {
+    const notification = { message, type }
+    setter(notification)
+    setTimeout(() => {
+      setter(null)
+    }, 5000)
   }
 
   const loginForm = () => (
@@ -79,13 +89,14 @@ const App = () => {
 
   return (
     <div>
+      <Notification notification={notification} />
       {user === null
         ? loginForm()
         :
         <div>
           <h2>blogs</h2>
           <p>{user.name} logged in <button onClick={handleLogout} type="button">logout</button></p>
-          <BlogForm blogs={blogs} setBlogs={setBlogs}/>
+          <BlogForm blogs={blogs} setBlogs={setBlogs} setNotification={setNotification} newNotification={newNotification}/>
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
           )}
