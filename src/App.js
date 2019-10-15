@@ -63,6 +63,13 @@ const App = () => {
     }, 5000)
   }
 
+  const updateLikes = async likedBlog => {
+    const newLikes = likedBlog.likes + 1
+    const updatedBlog = await blogService.update(likedBlog.id, { likes: newLikes })
+    setBlogs(blogs.map(blog => blog.id !== likedBlog.id ? blog : updatedBlog))
+    newNotification(setNotification, `Liked ${likedBlog.title} by ${likedBlog.author}`, 'success')
+  }
+
   const loginForm = () => (
     <div>
       <h2>log in to application</h2>
@@ -109,7 +116,7 @@ const App = () => {
             />
           </Togglable>
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} updateLikes={updateLikes}/>
           )}
         </div>
       }

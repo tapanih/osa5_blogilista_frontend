@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, updateLikes }) => {
   const [visible, setVisible] = useState(false)
 
   const blogStyle = {
@@ -17,13 +17,18 @@ const Blog = ({ blog }) => {
     setVisible(!visible)
   }
 
+  const handleLike = (event) => {
+    event.preventDefault()
+    updateLikes(blog)
+  }
+
   return (
     <div style={blogStyle}>
       <div onClick={toggleVisibility}>
         {blog.title} {blog.author}<br/>
         <div style={showWhenVisible}>
           <a href={blog.url}>{blog.url}</a><br/>
-          {blog.likes} <button onClick={() => console.log('klikattu')}>like</button><br/>
+          {blog.likes} <button onClick={handleLike}>like</button><br/>
           Added by {blog.user.name}
         </div>
       </div>
