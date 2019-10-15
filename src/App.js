@@ -28,6 +28,7 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
+      blogService.setToken(user.token)
       setUser(user)
     }
   }, [])
@@ -70,6 +71,13 @@ const App = () => {
     const newBlogs = blogs.map(blog => blog.id !== likedBlog.id ? blog : newBlog)
     setBlogs(newBlogs.sort((a, b) => b.likes - a.likes))
     newNotification(setNotification, `Liked ${likedBlog.title} by ${likedBlog.author}`, 'success')
+  }
+
+  const removeBlog = removedBlog => {
+    blogService.remove(removedBlog.id)
+    const newBlogs = blogs.filter(blog => blog.id !== removedBlog.id)
+    setBlogs(newBlogs.sort((a, b) => b.likes - a.likes))
+    newNotification(setNotification, `Removed ${removedBlog.title} by ${removedBlog.author}`, 'success')
   }
 
   const loginForm = () => (
@@ -118,7 +126,7 @@ const App = () => {
             />
           </Togglable>
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} updateLikes={updateLikes}/>
+            <Blog key={blog.id} blog={blog} updateLikes={updateLikes} removeBlog={removeBlog}/>
           )}
         </div>
       }
