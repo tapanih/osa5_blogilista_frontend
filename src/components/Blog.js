@@ -18,13 +18,16 @@ const Blog = ({ blog, updateLikes, removeBlog }) => {
   }
 
   const handleLike = (event) => {
+    event.stopPropagation()
     event.preventDefault()
     updateLikes(blog)
   }
 
   const handleRemove = (event) => {
     event.preventDefault()
-    removeBlog(blog)
+    if(window.confirm(`remove blog ${blog.title} by ${blog.author}`)) {
+      removeBlog(blog)
+    }
   }
 
   return (
@@ -33,7 +36,7 @@ const Blog = ({ blog, updateLikes, removeBlog }) => {
         {blog.title} {blog.author}<br/>
         <div style={showWhenVisible}>
           <a href={blog.url}>{blog.url}</a><br/>
-          {blog.likes} <button onClick={handleLike}>like</button><br/>
+          <span>{blog.likes} <button onClick={handleLike}>like</button><br/></span>
           Added by {blog.user.name}<br/>
           <button onClick={handleRemove}>remove</button>
         </div>
