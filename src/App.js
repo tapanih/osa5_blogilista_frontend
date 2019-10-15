@@ -19,6 +19,7 @@ const App = () => {
   useEffect(() => {
     blogService
       .getAll().then(initialBlogs => {
+        initialBlogs.sort((a, b) => b.likes - a)
         setBlogs(initialBlogs)
       })
   }, [])
@@ -63,10 +64,11 @@ const App = () => {
     }, 5000)
   }
 
-  const updateLikes = async likedBlog => {
-    const newLikes = likedBlog.likes + 1
-    const updatedBlog = await blogService.update(likedBlog.id, { likes: newLikes })
-    setBlogs(blogs.map(blog => blog.id !== likedBlog.id ? blog : updatedBlog))
+  const updateLikes = likedBlog => {
+    const newBlog = { ...likedBlog, likes: likedBlog.likes + 1 }
+    blogService.update(likedBlog.id, newBlog)
+    const newBlogs = blogs.map(blog => blog.id !== likedBlog.id ? blog : newBlog)
+    setBlogs(newBlogs.sort((a, b) => b.likes - a.likes))
     newNotification(setNotification, `Liked ${likedBlog.title} by ${likedBlog.author}`, 'success')
   }
 
