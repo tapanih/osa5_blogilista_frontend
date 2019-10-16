@@ -33,9 +33,9 @@ const Blog = ({ blog, updateLikes, removeBlog, user }) => {
 
   return (
     <div style={blogStyle}>
-      <div onClick={toggleVisibility}>
+      <div className='blog' onClick={toggleVisibility}>
         {blog.title} {blog.author}<br/>
-        <div style={showWhenVisible}>
+        <div style={showWhenVisible} className="togglableContent">
           <a href={blog.url}>{blog.url}</a><br/>
           {blog.likes} <button onClick={handleLike}>like</button><br/>
           Added by {blog.user.name}<br/>
