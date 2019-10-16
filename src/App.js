@@ -120,6 +120,7 @@ const App = () => {
             <BlogForm
               blogs={blogs}
               setBlogs={setBlogs}
+              user={user}
               setNotification={setNotification}
               newNotification={newNotification}
               blogFormRef={blogFormRef}
