@@ -19,7 +19,7 @@ const App = () => {
   useEffect(() => {
     blogService
       .getAll().then(initialBlogs => {
-        initialBlogs.sort((a, b) => b.likes - a)
+        initialBlogs.sort((a, b) => b.likes - a.likes)
         setBlogs(initialBlogs)
       })
   }, [])
@@ -126,7 +126,13 @@ const App = () => {
             />
           </Togglable>
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} updateLikes={updateLikes} removeBlog={removeBlog}/>
+            <Blog
+              key={blog.id}
+              blog={blog}
+              updateLikes={updateLikes}
+              removeBlog={removeBlog}
+              user={user}
+            />
           )}
         </div>
       }
