@@ -1,22 +1,25 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import blogService from '../services/blogs'
+import { useField } from '../hooks'
 
 const BlogForm = ({ blogs, setBlogs, user, setNotification, newNotification, blogFormRef }) => {
-  const [ title, setTitle ] = useState('')
-  const [ author, setAuthor ] = useState('')
-  const [ url, setUrl ] = useState('')
+  const title = useField('text')
+  const author = useField('text')
+  const url = useField('text')
 
   const addBlog = async (event) => {
     event.preventDefault()
     blogFormRef.current.toggleVisibility()
     try {
       const blog = await blogService.create({
-        title, author, url
+        title: title.fields.value,
+        author: author.fields.value,
+        url: url.fields.value
       })
-      setTitle('')
-      setAuthor('')
-      setUrl('')
+      title.reset()
+      author.reset()
+      url.reset()
       blog.user = {
         username: user.username,
         name: user.name,
@@ -35,30 +38,15 @@ const BlogForm = ({ blogs, setBlogs, user, setNotification, newNotification, blo
       <form onSubmit={addBlog}>
         <div>
           title:
-          <input
-            type="text"
-            value={title}
-            name="Title"
-            onChange={({ target }) => setTitle(target.value)}
-          />
+          <input {...title.fields} />
         </div>
         <div>
           author:
-          <input
-            type="text"
-            value={author}
-            name="Author"
-            onChange={({ target }) => setAuthor(target.value)}
-          />
+          <input {...author.fields} />
         </div>
         <div>
           url:
-          <input
-            type="text"
-            value={url}
-            name="Url"
-            onChange={({ target }) => setUrl(target.value)}
-          />
+          <input {...url.fields}/>
         </div>
         <button type="submit">create</button>
       </form>
