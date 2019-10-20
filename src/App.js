@@ -6,11 +6,12 @@ import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
+import { useField } from './hooks'
 
 const App = () => {
   const [ blogs, setBlogs ] = useState([])
-  const [ username, setUsername ] = useState('')
-  const [ password, setPassword ] = useState('')
+  const username = useField('text')
+  const password = useField('password')
   const [ user, setUser ] = useState(null)
   const [ notification, setNotification ] = useState(null)
 
@@ -37,17 +38,19 @@ const App = () => {
     event.preventDefault()
     try {
       const user = await loginService.login({
-        username, password
+        username: username.fields.value, password: password.fields.value
       })
       window.localStorage.setItem(
         'loggedBlogAppUser', JSON.stringify(user)
       )
       blogService.setToken(user.token)
       setUser(user)
-      setUsername('')
-      setPassword('')
+      username.reset()
+      password.reset()
     } catch (exception) {
       newNotification(setNotification, 'wrong username or password', 'error')
+      username.reset()
+      password.reset()
     }
   }
 
@@ -86,21 +89,11 @@ const App = () => {
       <form onSubmit={handleLogin}>
         <div>
           username
-          <input
-            type="text"
-            value={username}
-            name="Username"
-            onChange={({ target }) => setUsername(target.value)}
-          />
+          <input {...username.fields} />
         </div>
         <div>
           password
-          <input
-            type="password"
-            value={password}
-            name="Password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
+          <input {...password.fields} />
         </div>
         <button type="submit">login</button>
       </form>
