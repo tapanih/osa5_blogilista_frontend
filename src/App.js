@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { connect } from 'react-redux'
 import './App.css'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -7,13 +8,13 @@ import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import { useField } from './hooks'
+import { showNotification } from './reducers/notificationReducer'
 
-const App = () => {
+const App = (props) => {
   const [ blogs, setBlogs ] = useState([])
   const username = useField('text')
   const password = useField('password')
   const [ user, setUser ] = useState(null)
-  const [ notification, setNotification ] = useState(null)
 
   const blogFormRef = React.createRef()
 
@@ -48,7 +49,7 @@ const App = () => {
       username.reset()
       password.reset()
     } catch (exception) {
-      newNotification(setNotification, 'wrong username or password', 'error')
+      props.showNotification('wrong username or password', 'error')
       username.reset()
       password.reset()
     }
@@ -60,27 +61,19 @@ const App = () => {
     setUser(null)
   }
 
-  const newNotification = (setter, message, type) => {
-    const notification = { message, type }
-    setter(notification)
-    setTimeout(() => {
-      setter(null)
-    }, 5000)
-  }
-
   const updateLikes = likedBlog => {
     const newBlog = { ...likedBlog, likes: likedBlog.likes + 1 }
     blogService.update(likedBlog.id, newBlog)
     const newBlogs = blogs.map(blog => blog.id !== likedBlog.id ? blog : newBlog)
     setBlogs(newBlogs.sort((a, b) => b.likes - a.likes))
-    newNotification(setNotification, `Liked ${likedBlog.title} by ${likedBlog.author}`, 'success')
+    props.showNotification(`Liked ${likedBlog.title} by ${likedBlog.author}`, 'success')
   }
 
   const removeBlog = removedBlog => {
     blogService.remove(removedBlog.id)
     const newBlogs = blogs.filter(blog => blog.id !== removedBlog.id)
     setBlogs(newBlogs.sort((a, b) => b.likes - a.likes))
-    newNotification(setNotification, `Removed ${removedBlog.title} by ${removedBlog.author}`, 'success')
+    props.showNotification(`Removed ${removedBlog.title} by ${removedBlog.author}`, 'success')
   }
 
   const loginForm = () => (
@@ -102,7 +95,7 @@ const App = () => {
 
   return (
     <div>
-      <Notification notification={notification} />
+      <Notification />
       {user === null
         ? loginForm()
         :
@@ -114,8 +107,6 @@ const App = () => {
               blogs={blogs}
               setBlogs={setBlogs}
               user={user}
-              setNotification={setNotification}
-              newNotification={newNotification}
               blogFormRef={blogFormRef}
             />
           </Togglable>
@@ -134,4 +125,5 @@ const App = () => {
   )
 }
 
-export default App
+const ConnectedApp = connect(null, { showNotification })(App)
+export default ConnectedApp
