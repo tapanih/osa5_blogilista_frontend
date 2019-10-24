@@ -1,34 +1,30 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import blogService from '../services/blogs'
+import { connect } from 'react-redux'
+import { showNotification } from '../reducers/notificationReducer'
+import { createBlog } from '../reducers/blogReducer'
 import { useField } from '../hooks'
 
-const BlogForm = ({ blogs, setBlogs, user, setNotification, newNotification, blogFormRef }) => {
+const BlogForm = (props) => {
   const title = useField('text')
   const author = useField('text')
   const url = useField('text')
 
   const addBlog = async (event) => {
     event.preventDefault()
-    blogFormRef.current.toggleVisibility()
+    // blogFormRef.current.toggleVisibility()
     try {
-      const blog = await blogService.create({
+      const blog = {
         title: title.fields.value,
         author: author.fields.value,
         url: url.fields.value
-      })
+      }
       title.reset()
       author.reset()
       url.reset()
-      blog.user = {
-        username: user.username,
-        name: user.name,
-        id: user.id
-      }
-      setBlogs(blogs.concat(blog))
-      newNotification(setNotification, `a new blog "${blog.title} by ${blog.author}" added`, 'success')
+      props.createBlog(blog, props.user)
+      props.showNotification(`a new blog "${blog.title} by ${blog.author}" added`, 'success')
     } catch (exception) {
-      newNotification(setNotification, 'blog could not be added', 'error')
+      props.showNotification('blog could not be added', 'error')
     }
   }
 
@@ -54,13 +50,10 @@ const BlogForm = ({ blogs, setBlogs, user, setNotification, newNotification, blo
   )
 }
 
-BlogForm.propTypes = {
-  blogs: PropTypes.arrayOf(PropTypes.object).isRequired,
-  setBlogs: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired,
-  setNotification: PropTypes.func.isRequired,
-  newNotification: PropTypes.func.isRequired,
-  blogFormRef: PropTypes.object.isRequired
+const mapDispatchToProps = {
+  createBlog,
+  showNotification,
 }
 
-export default BlogForm
+const ConnectedBlogForm = connect(null, mapDispatchToProps)(BlogForm)
+export default ConnectedBlogForm
