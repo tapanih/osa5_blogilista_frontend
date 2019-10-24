@@ -9,9 +9,9 @@ import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import { useField } from './hooks'
 import { showNotification } from './reducers/notificationReducer'
+import { initializeBlogs, likeBlog, removeBlog } from './reducers/blogReducer'
 
 const App = (props) => {
-  const [ blogs, setBlogs ] = useState([])
   const username = useField('text')
   const password = useField('password')
   const [ user, setUser ] = useState(null)
@@ -19,12 +19,8 @@ const App = (props) => {
   const blogFormRef = React.createRef()
 
   useEffect(() => {
-    blogService
-      .getAll().then(initialBlogs => {
-        initialBlogs.sort((a, b) => b.likes - a.likes)
-        setBlogs(initialBlogs)
-      })
-  }, [])
+    props.initializeBlogs()
+  }, [props])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
@@ -61,19 +57,14 @@ const App = (props) => {
     setUser(null)
   }
 
-  const updateLikes = likedBlog => {
-    const newBlog = { ...likedBlog, likes: likedBlog.likes + 1 }
-    blogService.update(likedBlog.id, newBlog)
-    const newBlogs = blogs.map(blog => blog.id !== likedBlog.id ? blog : newBlog)
-    setBlogs(newBlogs.sort((a, b) => b.likes - a.likes))
-    props.showNotification(`Liked ${likedBlog.title} by ${likedBlog.author}`, 'success')
+  const like = blog => {
+    props.likeBlog(blog)
+    props.showNotification(`Liked ${blog.title} by ${blog.author}`, 'success')
   }
 
-  const removeBlog = removedBlog => {
-    blogService.remove(removedBlog.id)
-    const newBlogs = blogs.filter(blog => blog.id !== removedBlog.id)
-    setBlogs(newBlogs.sort((a, b) => b.likes - a.likes))
-    props.showNotification(`Removed ${removedBlog.title} by ${removedBlog.author}`, 'success')
+  const remove = blog => {
+    props.removeBlog(blog)
+    props.showNotification(`Removed ${blog.title} by ${blog.author}`, 'success')
   }
 
   const loginForm = () => (
@@ -104,18 +95,16 @@ const App = (props) => {
           <p>{user.name} logged in <button onClick={handleLogout} type="button">logout</button></p>
           <Togglable buttonLabel='new note' ref={blogFormRef}>
             <BlogForm
-              blogs={blogs}
-              setBlogs={setBlogs}
               user={user}
               blogFormRef={blogFormRef}
             />
           </Togglable>
-          {blogs.map(blog =>
+          {props.blogs.map(blog =>
             <Blog
               key={blog.id}
               blog={blog}
-              updateLikes={updateLikes}
-              removeBlog={removeBlog}
+              updateLikes={like}
+              removeBlog={remove}
               user={user}
             />
           )}
@@ -125,5 +114,18 @@ const App = (props) => {
   )
 }
 
-const ConnectedApp = connect(null, { showNotification })(App)
+const mapStateToProps = (state) => {
+  return {
+    blogs: state.blogs
+  }
+}
+
+const mapDispatchToProps = {
+  showNotification,
+  initializeBlogs,
+  likeBlog,
+  removeBlog,
+}
+
+const ConnectedApp = connect(mapStateToProps, mapDispatchToProps)(App)
 export default ConnectedApp
