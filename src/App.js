@@ -4,16 +4,15 @@ import './App.css'
 import blogService from './services/blogs'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
+import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
-import { useField } from './hooks'
+
 import { showNotification } from './reducers/notificationReducer'
 import { initializeBlogs, likeBlog, removeBlog } from './reducers/blogReducer'
-import { loginUser, logoutUser } from './reducers/userReducer'
+import { logoutUser } from './reducers/userReducer'
 
 const App = (props) => {
-  const username = useField('text')
-  const password = useField('password')
 
   const blogFormRef = React.createRef()
 
@@ -26,22 +25,6 @@ const App = (props) => {
       blogService.setToken(props.user.token)
     }
   }, [props.user])
-
-  const handleLogin = async (event) => {
-    event.preventDefault()
-    try {
-      props.loginUser({
-        username: username.fields.value,
-        password: password.fields.value,
-      })
-      username.reset()
-      password.reset()
-    } catch (exception) {
-      props.showNotification('wrong username or password', 'error')
-      username.reset()
-      password.reset()
-    }
-  }
 
   const handleLogout = (event) => {
     event.preventDefault()
@@ -58,28 +41,11 @@ const App = (props) => {
     props.showNotification(`Removed ${blog.title} by ${blog.author}`, 'success')
   }
 
-  const loginForm = () => (
-    <div>
-      <h2>log in to application</h2>
-      <form onSubmit={handleLogin}>
-        <div>
-          username
-          <input {...username.fields} />
-        </div>
-        <div>
-          password
-          <input {...password.fields} />
-        </div>
-        <button type="submit">login</button>
-      </form>
-    </div>
-  )
-
   return (
     <div>
       <Notification />
       {props.user === null
-        ? loginForm()
+        ? <LoginForm />
         :
         <div>
           <h2>blogs</h2>
@@ -117,7 +83,6 @@ const mapDispatchToProps = {
   initializeBlogs,
   likeBlog,
   removeBlog,
-  loginUser,
   logoutUser,
 }
 
