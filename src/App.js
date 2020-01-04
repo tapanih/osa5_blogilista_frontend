@@ -9,6 +9,7 @@ import blogService from './services/blogs'
 import Blogs from './components/Blogs'
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
+import User from './components/User'
 import Users from './components/Users'
 
 import { logoutUser } from './reducers/userReducer'
@@ -44,7 +45,10 @@ const App = (props) => {
           ? <LoginForm />
           : <>
               <Route exact path="/" render={() => <Blogs />} />
-              <Route path="/users" render={() => <Users />} />
+              <Route exact path="/users" render={() => <Users />} />
+              <Route path="/users/:id" render={({ match }) =>
+                <User id={match.params.id} />
+              } />
             </>}
       </Router>
     </div>
