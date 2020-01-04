@@ -11,7 +11,6 @@ const BlogForm = (props) => {
 
   const addBlog = async (event) => {
     event.preventDefault()
-    // blogFormRef.current.toggleVisibility()
     try {
       const blog = {
         title: title.fields.value,
