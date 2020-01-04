@@ -16,11 +16,6 @@ const Blogs = (props) => {
 
   const blogFormRef = React.createRef()
 
-  const handleLogout = (event) => {
-    event.preventDefault()
-    props.logoutUser()
-  }
-
   const like = blog => {
     props.likeBlog(blog)
     props.showNotification(`Liked ${blog.title} by ${blog.author}`, 'success')
@@ -34,7 +29,6 @@ const Blogs = (props) => {
   return (
     <div>
       <h2>blogs</h2>
-      <p>{props.user.name} logged in <button onClick={handleLogout} type="button">logout</button></p>
       <Togglable buttonLabel='new note' ref={blogFormRef}>
         <BlogForm
           user={props.user}
