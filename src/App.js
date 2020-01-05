@@ -33,18 +33,18 @@ const App = (props) => {
   return (
     <div>
       <Router>
-        <div>
-          <Link style={padding} to="/">blogs</Link>
-          <Link style={padding} to="/users">users</Link>
-          {props.user.name} logged in
-          <button onClick={handleLogout} type="button">
-            logout
-          </button>
-        </div>
         <Notification />
         {props.user === null
           ? <LoginForm />
           : <>
+            <div>
+              <Link style={padding} to="/">blogs</Link>
+              <Link style={padding} to="/users">users</Link>
+              {props.user.name} logged in
+              <button onClick={handleLogout} type="button">
+                logout
+              </button>
+            </div>
               <Route exact path="/" render={() => <Blogs />} />
               <Route exact path="/users" render={() => <Users />} />
               <Route path="/users/:id" render={({ match }) =>
