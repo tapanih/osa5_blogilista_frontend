@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { Table } from 'react-bootstrap'
 
 const User = (props) => {
 
@@ -11,10 +12,16 @@ const User = (props) => {
     <div>
       <h2>{props.user.name}</h2>
       <h3>added blogs</h3>
-      <ul>
-        {props.user.blogs.map(blog =>
-          <li key={blog.id}>{blog.title}</li>)}
-      </ul>
+      <Table striped>
+        <tbody>
+          {props.user.blogs.map(blog =>
+            <tr key={blog.id}>
+              <td>{blog.title}</td>
+              <td>{blog.author}</td>
+            </tr>
+          )}
+        </tbody>
+      </Table>
     </div>
   )
 }

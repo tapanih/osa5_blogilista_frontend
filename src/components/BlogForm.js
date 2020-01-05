@@ -4,6 +4,8 @@ import { showNotification } from '../reducers/notificationReducer'
 import { createBlog } from '../reducers/blogReducer'
 import { useField } from '../hooks'
 
+import { Button, Form } from 'react-bootstrap'
+
 const BlogForm = (props) => {
   const title = useField('text')
   const author = useField('text')
@@ -30,21 +32,17 @@ const BlogForm = (props) => {
   return (
     <div>
       <h2>create new</h2>
-      <form onSubmit={addBlog}>
-        <div>
-          title:
-          <input {...title.fields} />
-        </div>
-        <div>
-          author:
-          <input {...author.fields} />
-        </div>
-        <div>
-          url:
-          <input {...url.fields}/>
-        </div>
-        <button type="submit">create</button>
-      </form>
+      <Form onSubmit={addBlog}>
+        <Form.Group>
+          <Form.Label>title:</Form.Label>
+          <Form.Control {...title.fields} />
+          <Form.Label>author:</Form.Label>
+          <Form.Control {...author.fields} />
+          <Form.Label>url:</Form.Label>
+          <Form.Control {...url.fields} />
+          <Button variant="primary" type="submit">create</Button>
+        </Form.Group>
+      </Form>
     </div>
   )
 }

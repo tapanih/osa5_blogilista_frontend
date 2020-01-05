@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { showNotification } from '../reducers/notificationReducer'
 import { likeBlog, removeBlog, addComment } from '../reducers/blogReducer'
 import { useField } from '../hooks'
+import { Button, Form, ListGroup } from 'react-bootstrap'
 
 const Blog = (props) => {
   const comment = useField('text')
@@ -39,18 +40,20 @@ const Blog = (props) => {
     <div>
       <h2>{props.blog.title} by {props.blog.author}</h2>
       <a href={props.blog.url}>{props.blog.url}</a><br/>
-      {props.blog.likes} <button onClick={like}>like</button><br/>
+      {props.blog.likes} <Button variant="success" onClick={like}>like</Button><br/>
       Added by {props.blog.user.name}<br/>
-      {props.blog.user.id === props.user.id ?  <button onClick={remove}>remove</button> : <></>}
+      {props.blog.user.id === props.user.id ?  <Button variant="danger" onClick={remove}>remove</Button> : <></>}
       <h3>comments</h3>
-      <form onSubmit={newComment}>
-        <div><input {...comment.fields} /></div>
-        <button type="submit">add comment</button>
-      </form>
-      <ul>
+      <Form onSubmit={newComment}>
+        <Form.Group>
+          <Form.Control {...comment.fields} />
+          <Button type="submit">add comment</Button>
+        </Form.Group>
+      </Form>
+      <ListGroup>
         {props.blog.comments.map((content, index) =>
-          <li key={index}>{content}</li>)}
-      </ul>
+          <ListGroup.Item key={index}>{content}</ListGroup.Item>)}
+      </ListGroup>
     </div>
   )
 }

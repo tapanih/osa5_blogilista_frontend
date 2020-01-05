@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { initializeUsers } from '../reducers/usersReducer'
+import { Table } from 'react-bootstrap'
 
 const Users = (props) => {
 
@@ -12,7 +13,7 @@ const Users = (props) => {
   return (
     <div>
       <h2>blogs</h2>
-      <table>
+      <Table striped>
         <thead>
           <tr>
             <th>name</th>
@@ -26,7 +27,7 @@ const Users = (props) => {
               <td>{user.blogs.length}</td>
             </tr>)}
         </tbody>
-      </table>
+      </Table>
     </div>
   )
 }
