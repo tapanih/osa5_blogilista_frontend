@@ -1,56 +1,50 @@
-import React, { useState } from 'react'
-import PropTypes from 'prop-types'
+import React from 'react'
+import { connect } from 'react-redux'
 
-const Blog = ({ blog, updateLikes, removeBlog, user }) => {
-  const [visible, setVisible] = useState(false)
+import { showNotification } from '../reducers/notificationReducer'
+import { likeBlog, removeBlog } from '../reducers/blogReducer'
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
+const Blog = (props) => {
+
+  if (props.blog === undefined) {
+    return null
   }
 
-  const showWhenVisible = { display: visible ? '' : 'none' }
-
-  const toggleVisibility = () => {
-    setVisible(!visible)
+  const like = () => {
+    props.likeBlog(props.blog)
+    props.showNotification(`Liked ${props.blog.title} by ${props.blog.author}`, 'success')
   }
 
-  const handleLike = (event) => {
-    event.stopPropagation()
-    event.preventDefault()
-    updateLikes(blog)
-  }
-
-  const handleRemove = (event) => {
-    event.preventDefault()
-    if(window.confirm(`remove blog ${blog.title} by ${blog.author}`)) {
-      removeBlog(blog)
+  const remove = () => {
+    if(window.confirm(`remove blog ${props.blog.title} by ${props.blog.author}`)) {
+      props.removeBlog(props.blog)
+      props.showNotification(`Removed ${props.blog.title} by ${props.blog.author}`, 'success')
     }
   }
 
   return (
-    <div style={blogStyle}>
-      <div className='blog' onClick={toggleVisibility}>
-        {blog.title} {blog.author}<br/>
-        <div style={showWhenVisible} className="togglableContent">
-          <a href={blog.url}>{blog.url}</a><br/>
-          {blog.likes} <button onClick={handleLike}>like</button><br/>
-          Added by {blog.user.name}<br/>
-          {blog.user.id === user.id ?  <button onClick={handleRemove}>remove</button> : <></>}
-        </div>
-      </div>
+    <div>
+      <h2>{props.blog.title} by {props.blog.author}</h2>
+      <a href={props.blog.url}>{props.blog.url}</a><br/>
+      {props.blog.likes} <button onClick={like}>like</button><br/>
+      Added by {props.blog.user.name}<br/>
+      {props.blog.user.id === props.user.id ?  <button onClick={remove}>remove</button> : <></>}
     </div>
   )
 }
 
-Blog.propTypes = {
-  blog: PropTypes.object.isRequired,
-  user: PropTypes.object.isRequired,
-  updateLikes: PropTypes.func.isRequired,
-  removeBlog: PropTypes.func.isRequired
+const mapStateToProps = (state, ownProps) => {
+  return {
+    blog: state.blogs.find(blog => blog.id === ownProps.id),
+    user: state.user
+  }
 }
 
-export default Blog
+const mapDispatchToProps = {
+  showNotification,
+  likeBlog,
+  removeBlog
+}
+
+const ConnectedBlog = connect(mapStateToProps, mapDispatchToProps)(Blog)
+export default ConnectedBlog

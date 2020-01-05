@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom'
 import './App.css'
 import blogService from './services/blogs'
+import Blog from './components/Blog'
 import Blogs from './components/Blogs'
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
@@ -48,6 +49,9 @@ const App = (props) => {
               <Route exact path="/users" render={() => <Users />} />
               <Route path="/users/:id" render={({ match }) =>
                 <User id={match.params.id} />
+              } />
+              <Route path="/blogs/:id" render={({ match }) =>
+                <Blog id={match.params.id} />
               } />
             </>}
       </Router>

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 
-import Blog from './Blog'
 import BlogForm from './BlogForm'
 import Togglable from './Togglable'
 
@@ -10,21 +10,19 @@ import { initializeBlogs, likeBlog, removeBlog } from '../reducers/blogReducer'
 
 const Blogs = (props) => {
 
+  const blogStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    border: 'solid',
+    borderWidth: 1,
+    marginBottom: 5
+  }
+
   useEffect(() => {
     props.initializeBlogs()
   }, [props])
 
   const blogFormRef = React.createRef()
-
-  const like = blog => {
-    props.likeBlog(blog)
-    props.showNotification(`Liked ${blog.title} by ${blog.author}`, 'success')
-  }
-
-  const remove = blog => {
-    props.removeBlog(blog)
-    props.showNotification(`Removed ${blog.title} by ${blog.author}`, 'success')
-  }
 
   return (
     <div>
@@ -35,13 +33,9 @@ const Blogs = (props) => {
         />
       </Togglable>
       {props.blogs.map(blog =>
-        <Blog
-          key={blog.id}
-          blog={blog}
-          updateLikes={like}
-          removeBlog={remove}
-          user={props.user}
-        />
+        <div key={blog.id} style={blogStyle}>
+          <Link to={`/blogs/${blog.id}`}>{blog.title} {blog.author}</Link>
+        </div>
       )}
     </div>
   )
