@@ -35,12 +35,12 @@ const BlogForm = (props) => {
       <Form onSubmit={addBlog}>
         <Form.Group>
           <Form.Label>title:</Form.Label>
-          <Form.Control {...title.fields} />
+          <Form.Control data-cy="title" {...title.fields} />
           <Form.Label>author:</Form.Label>
-          <Form.Control {...author.fields} />
+          <Form.Control data-cy="author" {...author.fields} />
           <Form.Label>url:</Form.Label>
-          <Form.Control {...url.fields} />
-          <Button variant="primary" type="submit">create</Button>
+          <Form.Control data-cy="url" {...url.fields} />
+          <Button data-cy="submit" variant="primary" type="submit">create</Button>
         </Form.Group>
       </Form>
     </div>

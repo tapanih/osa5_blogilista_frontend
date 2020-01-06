@@ -30,10 +30,10 @@ const LoginForm = (props) => {
       <Form onSubmit={handleLogin}>
         <Form.Group>
           <Form.Label>username:</Form.Label>
-          <Form.Control {...username.fields} />
+          <Form.Control data-cy="username" {...username.fields} />
           <Form.Label>password:</Form.Label>
-          <Form.Control {...password.fields} />
-          <Button variant="primary" type="submit">login</Button>
+          <Form.Control data-cy="password" {...password.fields} />
+          <Button data-cy="login" variant="primary" type="submit">login</Button>
         </Form.Group>
       </Form>
     </div>

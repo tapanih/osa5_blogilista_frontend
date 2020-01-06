@@ -66,10 +66,9 @@ const blogReducer = (state = [], action) => {
   case 'NEW_BLOG':
     return state.concat(action.data)
   case 'LIKE_BLOG': {
-    const newState = state.map(blog =>
+    return state.map(blog =>
       blog.id !== action.data.id ? blog : action.data)
-    state = newState.sort((a, b) => b.likes - a.likes)
-    return state
+      .sort((a, b) => b.likes - a.likes)
   }
   case 'REMOVE_BLOG':
     return state.filter(blog => blog.id !== action.data.id)

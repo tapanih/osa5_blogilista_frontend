@@ -40,17 +40,18 @@ const Blog = (props) => {
     <div>
       <h2>{props.blog.title} by {props.blog.author}</h2>
       <a href={props.blog.url}>{props.blog.url}</a><br/>
-      {props.blog.likes} <Button variant="success" onClick={like}>like</Button><br/>
+      <span data-cy="likes">{props.blog.likes} likes</span>
+      <Button data-cy="likeButton" variant="success" onClick={like}>like</Button><br/>
       Added by {props.blog.user.name}<br/>
       {props.blog.user.id === props.user.id ?  <Button variant="danger" onClick={remove}>remove</Button> : <></>}
       <h3>comments</h3>
       <Form onSubmit={newComment}>
         <Form.Group>
-          <Form.Control {...comment.fields} />
-          <Button type="submit">add comment</Button>
+          <Form.Control data-cy="commentField" {...comment.fields} />
+          <Button data-cy="submitComment" type="submit">add comment</Button>
         </Form.Group>
       </Form>
-      <ListGroup>
+      <ListGroup data-cy="comments">
         {props.blog.comments.map((content, index) =>
           <ListGroup.Item key={index}>{content}</ListGroup.Item>)}
       </ListGroup>

@@ -27,7 +27,7 @@ const Blogs = (props) => {
   return (
     <div>
       <h2>blogs</h2>
-      <Togglable buttonLabel='new note' ref={blogFormRef}>
+      <Togglable buttonLabel='new blog' ref={blogFormRef}>
         <BlogForm
           user={props.user}
         />
